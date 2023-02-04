@@ -117,7 +117,7 @@ _GLIBCXX_BEGIN_NAMESPACE(std)
 
 #if BUILDING_LIBSTDCXX
 		__attribute__((used))
-		~basic_stringbuf() noexcept {}
+		~basic_stringbuf() {}
 #endif
 
       // Get and set:
