@@ -117,7 +117,11 @@ _GLIBCXX_BEGIN_NAMESPACE(std)
 
 #if BUILDING_LIBSTDCXX
 		__attribute__((used))
+#ifdef DARLING
+		~basic_stringbuf() noexcept {}
+#else
 		~basic_stringbuf() {}
+#endif // DARLING
 #endif
 
       // Get and set:

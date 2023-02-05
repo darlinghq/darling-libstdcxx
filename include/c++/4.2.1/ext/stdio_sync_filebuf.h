@@ -74,7 +74,11 @@ _GLIBCXX_BEGIN_NAMESPACE(__gnu_cxx)
 
 #if BUILDING_LIBSTDCXX
 	__attribute__((used))
+#ifdef DARLING
+	virtual ~stdio_sync_filebuf() noexcept {}
+#else
 	virtual ~stdio_sync_filebuf() {}
+#endif // DARLING
 #endif
 		
 		/**
