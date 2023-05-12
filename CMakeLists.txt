@@ -4,7 +4,6 @@ add_compile_options(
 	-nostdinc
 	-nostdinc++
 	-w
-	-include${CMAKE_CURRENT_SOURCE_DIR}/build.h
 )
 
 include_directories(BEFORE
@@ -33,7 +32,7 @@ set(libstdcxx_sources
 	src/ctype.cc
 	src/ctype_members.cc
 	src/debug.cc
-	#src/debug_list.cc # Doesn't build, text relocation?!
+	src/debug_list.cc
 	src/del_op.cc
 	src/del_opnt.cc
 	src/del_opv.cc
@@ -47,8 +46,8 @@ set(libstdcxx_sources
 	src/ios.cc
 	src/ios_failure.cc
 	src/ios_init.cc
-	src/ios-inst.cc
 	src/ios_locale.cc
+	src/ios-inst.cc
 	src/iostream-inst.cc
 	src/istream.cc
 	src/istream-inst.cc
@@ -83,7 +82,11 @@ set(libstdcxx_sources
 	src/valarray-inst.cc
 	src/wlocale-inst.cc
 	src/wstring-inst.cc
-	src/dso_handle.c
+)
+
+set_property(SOURCE src/concept-inst.cc APPEND_STRING
+	PROPERTY COMPILE_DEFINITIONS
+		"_GLIBCXX_CONCEPT_CHECKS"
 )
 
 set(DYLIB_INSTALL_NAME "/usr/lib/libstdc++.6.dylib")
@@ -96,7 +99,10 @@ target_link_libraries(stdcxx PRIVATE system cxxabi)
 set_target_properties(stdcxx PROPERTIES
 	OUTPUT_NAME "stdc++.6"
 )
-set_property(TARGET stdcxx APPEND_STRING PROPERTY LINK_FLAGS " -Wl,-reexport_library,${CMAKE_BINARY_DIR}/src/external/libcxxabi/libc++abi.dylib ")
+set_property(TARGET stdcxx APPEND_STRING
+	PROPERTY LINK_FLAGS 
+		" -Wl,-force_symbols_not_weak_list,${CMAKE_CURRENT_SOURCE_DIR}/exports/notweak.exp -Wl,-force_symbols_weak_list,${CMAKE_CURRENT_SOURCE_DIR}/exports/weak.exp -Wl,-reexport_library,${CMAKE_BINARY_DIR}/src/external/libcxxabi/libc++abi.dylib "
+)
 add_dependencies(stdcxx cxxabi)
 
 install(TARGETS stdcxx DESTINATION libexec/darling/usr/lib)
