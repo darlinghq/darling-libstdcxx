@@ -4,6 +4,7 @@ add_compile_options(
 	-nostdinc
 	-nostdinc++
 	-w
+	-std=c++14
 )
 
 include_directories(BEFORE
